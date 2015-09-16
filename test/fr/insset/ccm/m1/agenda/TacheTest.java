@@ -47,6 +47,7 @@ public class TacheTest {
         Tache instance = new Tache();
         String expResult = "Toto";
         instance.setTitre("Toto");
+        System.out.println(instance);
         String result = instance.getTitre();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.

@@ -6,6 +6,7 @@
 package fr.insset.ccm.m1.agenda;
 
 import java.util.Date;
+import java.util.Objects;
 
 /* Cours */
 // variable d'instance toujours private
@@ -22,48 +23,79 @@ public class Tache {
     private boolean terminée;
     private Date dateTache;
 
+
     
-    // Getters
+    @Override
+    public String toString(){
+        return getTitre();
+    }
+
     public String getTitre() {
         return titre;
+    }
+
+    public void setTitre(String titre) {
+        this.titre = titre;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public int getImportance() {
-        return importance;
-    }
-
-    public boolean isTerminée() {
-        return terminée;
-    }
-
-    public Date getDateTache() {
-        return dateTache;
-    }
-
-    // Setters
-    public void setTitre(String titre) {
-        this.titre = titre;
-    }
-
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getImportance() {
+        return importance;
     }
 
     public void setImportance(int importance) {
         this.importance = importance;
     }
 
+    public boolean isTerminée() {
+        return terminée;
+    }
+
     public void setTerminée(boolean terminée) {
         this.terminée = terminée;
+    }
+
+    public Date getDateTache() {
+        return dateTache;
     }
 
     public void setDateTache(Date dateTache) {
         this.dateTache = dateTache;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 37 * hash + Objects.hashCode(this.titre);
+        hash = 37 * hash + Objects.hashCode(this.dateTache);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Tache other = (Tache) obj;
+        if (!Objects.equals(this.titre, other.titre)) {
+            return false;
+        }
+        if (!Objects.equals(this.dateTache, other.dateTache)) {
+            return false;
+        }
+        return true;
+    }
+
     
     
 }
