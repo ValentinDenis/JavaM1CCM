@@ -3,10 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.insset.ccm.m1.pkg01_mardi;
 
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
+package fr.insset.ccm.m1.util;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -17,17 +16,10 @@ import java.util.Set;
 
 /**
  *
- * @author valentindenis
- * @param <K>
- * @param <V>
+ * @author jldeleage
  */
 public class SimpleMap<K,V> implements Map<K,V> {
 
-    // Contraintes: 
-    // 
-    private Object[] clefs = {};
-    private Object[] valeurs = {};
-    
     @Override
     public int size() {
         return clefs.length;
@@ -46,8 +38,8 @@ public class SimpleMap<K,V> implements Map<K,V> {
 
     @Override
     public boolean containsValue(Object value) {
-        for (Object valeur : valeurs) {
-            if (Objects.equals(valeur, value)) {
+        for (int i=0 ; i<valeurs.length ; i++) {
+            if (Objects.equals(valeurs[i], value)) {
                 return true;
             }
         }
@@ -57,82 +49,85 @@ public class SimpleMap<K,V> implements Map<K,V> {
     @Override
     public V get(Object key) {
         int indice = getIndice(key);
-        if(indice >= 0){
+        if (indice >= 0) {
             return (V)valeurs[indice];
         }
         return null;
-        
     }
-   
+
     @Override
     public V put(K key, V value) {
         int indice = getIndice(key);
         if (indice < 0) {
-            // Pas de valeur associee a cette clef, inserer dans le tableau
-            
-            // Key
+            // il n'y avait pas de valeur associee a cette clef
             Object[] aux;
             int longueur = clefs.length;
-            aux = new Object[longueur+1];
+            aux = new Object[longueur + 1];
             System.arraycopy(clefs, 0, aux, 0, longueur);
             aux[longueur] = key;
             clefs = aux;
-            
-            // Value
-            aux = new Object[longueur+1];
+            aux = new Object[longueur + 1];
             System.arraycopy(valeurs, 0, aux, 0, longueur);
             aux[longueur] = value;
             valeurs = aux;
-            
             return null;
-        }else{
-            V ancienneValeur = (V)valeurs[indice];
+        }
+        else {
+            // Il y avait deja une valeur associee a cette clef.
+            // Ecraser cette valeur mais il faut la recuperer
+            // avant pour pouvoir la renvoyer
+            V ancienneValeur = (V) valeurs[indice];
             valeurs[indice] = value;
             return ancienneValeur;
         }
-    }
+    }       // put
 
     @Override
     public V remove(Object key) {
         int indice = getIndice(key);
-        int longueur = clefs.length -1;
-        if (indice >= 0) {
-            // la clé existe
+        if (indice < 0) {
+            return null;
+        }
+        else {
+            // Il y a bien un couple avec cette clef
             Object[] aux;
-            aux = new Object[longueur];
+            // Il faudra renvoyer la valeur que l'on va ecraser
+            // donc on commence par la sauvegarder
+            V valeur = (V) valeurs[indice];
+            int longueur = clefs.length;
+            aux = new Object[longueur-1];
+            // Copier les clefs avant l'indice de la clef
             System.arraycopy(clefs, 0, aux, 0, indice);
-            System.arraycopy(clefs, indice+1, aux, indice, longueur-indice);
+            // Copier les clefs après l'indice
+            System.arraycopy(clefs, indice+1, aux, indice, longueur-indice-1);
             clefs = aux;
-            
-            aux = new Object[longueur];
+            aux = new Object[longueur-1];
+            // Copier les valeurs avant l'indice de la clef
             System.arraycopy(valeurs, 0, aux, 0, indice);
-            System.arraycopy(valeurs, indice+1, aux, indice, longueur-indice);
+            // Copier les valeurs après l'indice
+            System.arraycopy(valeurs, indice+1, aux, indice, longueur-indice-1);
             valeurs = aux;
-            
-            return null;
-          
-            
-        }else{
-            // la clé n'existe pas
-            return null;
+            return valeur;
         }
     }
 
     @Override
     public void putAll(Map<? extends K, ? extends V> m) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for (K k : m.keySet()) {
+            put(k, m.get(k));
+        }
     }
 
     @Override
     public void clear() {
-        valeurs = new Object[0];
         clefs = new Object[0];
+        valeurs = new Object[0];
     }
 
     @Override
     public Set<K> keySet() {
         HashSet<K> resultat = new HashSet<K>();
-        for(Object obj:clefs){
+        for (Object obj : clefs) {
             resultat.add((K)obj);
         }
         return resultat;
@@ -141,8 +136,8 @@ public class SimpleMap<K,V> implements Map<K,V> {
     @Override
     public Collection<V> values() {
         List<V> resultat = new LinkedList<>();
-        for(Object obj:valeurs){
-            
+        for (Object obj : valeurs) {
+            resultat.add((V)obj);
         }
         return resultat;
     }
@@ -151,14 +146,27 @@ public class SimpleMap<K,V> implements Map<K,V> {
     public Set<Entry<K, V>> entrySet() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    protected int getIndice(Object key){
-        for (int i = 0; i<clefs.length ; i++){
-            if(Objects.equals(clefs[i], key)){
+
+    /**
+     * Cherche l'indice de la clef dans le tableau des clefs.
+     * Si la clef est absente du tableau, renvoie -1
+     * 
+     * @param Object key : clef dont on cherche l'indice
+     * @return int : indice de la clef ou -1 si elle est absente
+     */
+    protected int getIndice(Object key) {
+        for (int i=0 ; i<clefs.length ; i++) {
+            if (Objects.equals(clefs[i], key)) {
                 return i;
             }
         }
         return -1;
     }
-    
+
+    private Object[]    clefs = {};
+    private Object[]    valeurs = {};
+
+
 }
+
+

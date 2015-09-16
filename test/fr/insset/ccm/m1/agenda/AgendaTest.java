@@ -3,25 +3,49 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package fr.insset.ccm.m1.agenda;
 
-import java.util.Collection;
-import java.util.Iterator;
+import static fr.insset.ccm.m1.agenda.Priorite.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
+import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
- * @author valentindenis
+ * @author jldeleage
  */
 public class AgendaTest {
     
+    private Agenda  monAgenda = new Agenda(new ArrayList<Tache>());
+    private Tache[] taches = {
+        nouvelleTache("Cours Java M1 - 1", null, "15/09/15:08:30", MOYENNE),
+        nouvelleTache("Vérifier EdT", null, "14/09/15", HAUTE),
+        nouvelleTache("Cours Java M1 - 4", null, "16/09/15:13:45", MOYENNE),
+        nouvelleTache("Cours Java M1 - 2", null, "15/09/15:13:45", MOYENNE),
+        nouvelleTache("Boire un pot", null, "15/09/15", HAUTE)
+    };
+    private int[]  ordreNaturel = {
+        1, 4, 0, 3, 2 
+    };
+    private int[] ordreAlphabetique = {
+        4, 0, 3, 2, 1
+    };
+
     public AgendaTest() {
     }
     
@@ -35,10 +59,48 @@ public class AgendaTest {
     
     @Before
     public void setUp() {
+        for (Tache t : taches) {
+            monAgenda.add(t);
+        }
     }
     
     @After
     public void tearDown() {
+    }
+
+
+    protected Tache nouvelleTache(String inTitre, String inDescription, String inDate, Priorite inPriorite) {
+        Tache resultat = new Tache();
+        resultat.setTitre(inTitre);
+        resultat.setDescription(inDescription);
+        if (inDate != null) {
+            SimpleDateFormat format;
+            switch (inDate.length()) {
+                case 8 :
+                    format = new SimpleDateFormat("dd/MM/yy");
+                    break;
+                case 10:
+                    format = new SimpleDateFormat("dd/MM/yyyy");
+                    break;
+                case 14 :
+                    format = new SimpleDateFormat("dd/MM/yy:hh:mm");
+                    break;
+                case 16 :
+                    format = new SimpleDateFormat("dd/MM/yyyy:hh:mm");
+                    break;
+                default:
+                    format = new SimpleDateFormat("dd/MM/yy");
+                    break;
+            }
+            try {
+                Date d;
+                d = format.parse(inDate);
+                resultat.setDateTache(d);
+            } catch (ParseException ex) {
+                Logger.getLogger(AgendaTest.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return resultat;
     }
 
     /**
@@ -48,350 +110,57 @@ public class AgendaTest {
     public void testGetTachesImportantes() {
         System.out.println("getTachesImportantes");
         int inImportance = 0;
-        Agenda instance = null;
-        List<Tache> expResult = null;
-        List<Tache> result = instance.getTachesImportantes(inImportance);
-        assertEquals(expResult, result);
+        Agenda instance = new Agenda(new LinkedList<>());
+        Tache t = new Tache();
+        t.setImportance(BASSE);
+        t.setImportance(MOYENNE);
+        instance.add(t);
+        ArrayList result = instance.getTachesImportantes(1);
+        assertEquals(1, result.size());
+        result = instance.getTachesImportantes(3);
+        assertEquals(0, result.size());
+        result = instance.getTachesImportantes(2);
+        assertEquals(1, result.size());
         // TODO review the generated test code and remove the default call to fail.
-    }
-
-    /**
-     * Test of size method, of class Agenda.
-     */
-    @Test
-    public void testSize() {
-        System.out.println("size");
-        Agenda instance = null;
-        int expResult = 0;
-        int result = instance.size();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of isEmpty method, of class Agenda.
-     */
-    @Test
-    public void testIsEmpty() {
-        System.out.println("isEmpty");
-        Agenda instance = null;
-        boolean expResult = false;
-        boolean result = instance.isEmpty();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of contains method, of class Agenda.
-     */
-    @Test
-    public void testContains() {
-        System.out.println("contains");
-        Object o = null;
-        Agenda instance = null;
-        boolean expResult = false;
-        boolean result = instance.contains(o);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of iterator method, of class Agenda.
-     */
-    @Test
-    public void testIterator() {
-        System.out.println("iterator");
-        Agenda instance = null;
-        Iterator<Tache> expResult = null;
-        Iterator<Tache> result = instance.iterator();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of toArray method, of class Agenda.
-     */
-    @Test
-    public void testToArray_0args() {
-        System.out.println("toArray");
-        Agenda instance = null;
-        Object[] expResult = null;
-        Object[] result = instance.toArray();
-        assertArrayEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of toArray method, of class Agenda.
-     */
-    @Test
-    public void testToArray_GenericType() {
-        System.out.println("toArray");
-        Object[] a = null;
-        Agenda instance = null;
-        Object[] expResult = null;
-        Object[] result = instance.toArray(a);
-        assertArrayEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of add method, of class Agenda.
-     */
-    @Test
-    public void testAdd_Tache() {
-        System.out.println("add");
-        Tache e = null;
-        Agenda instance = null;
-        boolean expResult = false;
-        boolean result = instance.add(e);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of remove method, of class Agenda.
-     */
-    @Test
-    public void testRemove_Object() {
-        System.out.println("remove");
-        Object o = null;
-        Agenda instance = null;
-        boolean expResult = false;
-        boolean result = instance.remove(o);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of containsAll method, of class Agenda.
-     */
-    @Test
-    public void testContainsAll() {
-        System.out.println("containsAll");
-        Collection c = null;
-        Agenda instance = null;
-        boolean expResult = false;
-        boolean result = instance.containsAll(c);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of addAll method, of class Agenda.
-     */
-    @Test
-    public void testAddAll_Collection() {
-        System.out.println("addAll");
-        Collection<? extends Tache> c = null;
-        Agenda instance = null;
-        boolean expResult = false;
-        boolean result = instance.addAll(c);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of addAll method, of class Agenda.
-     */
-    @Test
-    public void testAddAll_int_Collection() {
-        System.out.println("addAll");
-        int index = 0;
-        Collection<? extends Tache> c = null;
-        Agenda instance = null;
-        boolean expResult = false;
-        boolean result = instance.addAll(index, c);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of removeAll method, of class Agenda.
-     */
-    @Test
-    public void testRemoveAll() {
-        System.out.println("removeAll");
-        Collection c = null;
-        Agenda instance = null;
-        boolean expResult = false;
-        boolean result = instance.removeAll(c);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of retainAll method, of class Agenda.
-     */
-    @Test
-    public void testRetainAll() {
-        System.out.println("retainAll");
-        Collection c = null;
-        Agenda instance = null;
-        boolean expResult = false;
-        boolean result = instance.retainAll(c);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of clear method, of class Agenda.
-     */
-    @Test
-    public void testClear() {
-        System.out.println("clear");
-        Agenda instance = null;
-        instance.clear();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of get method, of class Agenda.
-     */
-    @Test
-    public void testGet() {
-        System.out.println("get");
-        int index = 0;
-        Agenda instance = null;
-        Tache expResult = null;
-        Tache result = instance.get(index);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of set method, of class Agenda.
-     */
-    @Test
-    public void testSet() {
-        System.out.println("set");
-        int index = 0;
-        Tache element = null;
-        Agenda instance = null;
-        Tache expResult = null;
-        Tache result = instance.set(index, element);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of add method, of class Agenda.
-     */
-    @Test
-    public void testAdd_int_Tache() {
-        System.out.println("add");
-        int index = 0;
-        Tache element = null;
-        Agenda instance = null;
-        instance.add(index, element);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of remove method, of class Agenda.
-     */
-    @Test
-    public void testRemove_int() {
-        System.out.println("remove");
-        int index = 0;
-        Agenda instance = null;
-        Tache expResult = null;
-        Tache result = instance.remove(index);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of indexOf method, of class Agenda.
-     */
-    @Test
-    public void testIndexOf() {
-        System.out.println("indexOf");
-        Object o = null;
-        Agenda instance = null;
-        int expResult = 0;
-        int result = instance.indexOf(o);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of lastIndexOf method, of class Agenda.
-     */
-    @Test
-    public void testLastIndexOf() {
-        System.out.println("lastIndexOf");
-        Object o = null;
-        Agenda instance = null;
-        int expResult = 0;
-        int result = instance.lastIndexOf(o);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of listIterator method, of class Agenda.
-     */
-    @Test
-    public void testListIterator_0args() {
-        System.out.println("listIterator");
-        Agenda instance = null;
-        ListIterator<Tache> expResult = null;
-        ListIterator<Tache> result = instance.listIterator();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of listIterator method, of class Agenda.
-     */
-    @Test
-    public void testListIterator_int() {
-        System.out.println("listIterator");
-        int index = 0;
-        Agenda instance = null;
-        ListIterator<Tache> expResult = null;
-        ListIterator<Tache> result = instance.listIterator(index);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of subList method, of class Agenda.
-     */
-    @Test
-    public void testSubList() {
-        System.out.println("subList");
-        int fromIndex = 0;
-        int toIndex = 0;
-        Agenda instance = null;
-        List<Tache> expResult = null;
-        List<Tache> result = instance.subList(fromIndex, toIndex);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
     
-}
+
+    @Test
+    public void testTriNaturel() {
+        // Verification avant le tri
+        System.out.println("   ------");
+        System.out.println("Tri par ordre chronologique (ordre naturel)");
+        int indice = 0;
+        for (Tache t : monAgenda) {
+            System.out.println(t);
+            assertEquals(t, taches[indice++]);
+        }
+        System.out.println("   ------");
+        Collections.sort(monAgenda);
+        indice = 0;
+        for (Tache t : monAgenda) {
+            System.out.println(t);
+            assertEquals(t, taches[ordreNaturel[indice++]]);
+        }
+    }
+
+    @Test
+    public void testTriParOrdreAlphabetique() {
+        System.out.println("   ------");
+        System.out.println("Tri par ordre alphabétique");
+        Collections.sort(monAgenda, new ComparateurAlphabetique());
+        int indice = 0;
+        for (Tache t : monAgenda) {
+            System.out.println(t);
+            assertEquals(t, taches[ordreAlphabetique[indice++]]);
+        }
+    }
+
+    private static class ComparateurAlphabetique implements Comparator<Tache> {
+        @Override
+        public int compare(Tache o1, Tache o2) {
+            return o1.getTitre().compareTo(o2.getTitre());
+        }
+    }       // ComparateurAlphabetique
+
+}       // AgendaTest

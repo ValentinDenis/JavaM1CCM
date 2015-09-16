@@ -3,32 +3,34 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package fr.insset.ccm.m1.agenda;
 
 /**
  *
- * @author valentindenis
+ * @author jldeleage
  */
-public class Priorite {
-    private int valeur;
-    private int description;
-    public final static Priorite BASSE = new Priorite(1);
-    public final static Priorite MOYENNE = new Priorite(2);
-    public final static Priorite HAUTE = new Priorite(3);
-    
-    private Priorite(int inValeur){
-        this.valeur = inValeur;
+public enum Priorite {
+    BASSE(1),
+    MOYENNE(2),
+    HAUTE(3);
+
+    private Priorite(int inValeur) {
+            valeur = inValeur;
     }
-    
-    public void setDescription(int description){
-        this.description = description;
+
+    public int getValeur() {
+            return valeur;
     }
-    public int getValeur(){
-        return valeur;
-    }   
-    public int getDescription(){
+
+    public int getDescription() {
         return description;
     }
-    
 
+    public void setDescription(int description) {
+        this.description = description;
+    }
+
+    private int	valeur;
+    private int description;
 }

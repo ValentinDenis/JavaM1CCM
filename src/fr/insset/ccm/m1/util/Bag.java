@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.insset.ccm.m1.pkg01_mardi;
+package fr.insset.ccm.m1.util;
 
 import java.util.Collection;
 import java.util.Iterator;

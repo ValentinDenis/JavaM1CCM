@@ -5,29 +5,27 @@
  */
 package fr.insset.ccm.m1.agenda;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
-/* Cours */
-// variable d'instance toujours private
-//
-
 /**
  *
- * @author valentindenis
+ * @author jldeleage
  */
-public class Tache {
-    private String titre;
-    private String description;
-    private int importance;
-    private boolean terminée;
-    private Date dateTache;
+public class Tache implements Comparable<Tache> {
 
+    private static final SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm");
 
-    
     @Override
-    public String toString(){
-        return getTitre();
+    public String toString() {
+        StringBuffer buffer = new StringBuffer(getTitre());
+        Date d = getDateTache();
+        if (d != null) {
+            buffer.append(' ');
+            buffer.append(format.format(d));
+        }
+        return buffer.toString();
     }
 
     public String getTitre() {
@@ -46,20 +44,20 @@ public class Tache {
         this.description = description;
     }
 
-    public int getImportance() {
+    public Priorite getImportance() {
         return importance;
     }
 
-    public void setImportance(int importance) {
+    public void setImportance(Priorite importance) {
         this.importance = importance;
     }
 
-    public boolean isTerminée() {
-        return terminée;
+    public boolean isTerminee() {
+        return terminee;
     }
 
-    public void setTerminée(boolean terminée) {
-        this.terminée = terminée;
+    public void setTerminee(boolean terminee) {
+        this.terminee = terminee;
     }
 
     public Date getDateTache() {
@@ -73,8 +71,8 @@ public class Tache {
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 37 * hash + Objects.hashCode(this.titre);
-        hash = 37 * hash + Objects.hashCode(this.dateTache);
+        hash = 23 * hash + Objects.hashCode(this.titre);
+        hash = 23 * hash + Objects.hashCode(this.dateTache);
         return hash;
     }
 
@@ -96,6 +94,30 @@ public class Tache {
         return true;
     }
 
-    
-    
+    @Override
+    public int compareTo(Tache o) {
+        if (o == null) {
+            return -1;
+        }
+        Date dateAutreTache = o.getDateTache();
+        if (dateAutreTache == null && dateTache == null) {
+            return 0;
+        }
+        if (dateAutreTache == null) {
+            return -1;
+        }
+        if (dateTache == null) {
+            return 1;
+        }
+        return dateTache.compareTo(dateAutreTache);
+    }
+
+
+    private String   titre;
+    private String   description;
+    private Priorite importance;
+    private boolean  terminee;
+    private Date     dateTache;
+
+
 }

@@ -3,10 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.insset.ccm.m1.pkg01_mardi;
+
+package fr.insset.ccm.m1.util;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -16,10 +19,16 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author valentindenis
+ * @author jldeleage
  */
 public class SimpleBagTest {
     
+
+    private SimpleBag<String>   monBag;
+    public final static String  UN = "un",
+                                DEUX = "deux", 
+                                TROIS = "trois";
+
     public SimpleBagTest() {
     }
     
@@ -33,6 +42,13 @@ public class SimpleBagTest {
     
     @Before
     public void setUp() {
+        monBag = new SimpleBag<>();
+        monBag.add(UN);
+        monBag.add(DEUX);
+        monBag.add(TROIS);
+        monBag.add(DEUX);
+        monBag.add(TROIS);
+        monBag.add(TROIS);
     }
     
     @After
@@ -45,12 +61,9 @@ public class SimpleBagTest {
     @Test
     public void testGetNbElementsDistincts() {
         System.out.println("getNbElementsDistincts");
-        SimpleBag instance = new SimpleBag();
-        int expResult = 0;
-        int result = instance.getNbElementsDistincts();
+        int expResult = 3;
+        int result = monBag.getNbElementsDistincts();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -59,24 +72,26 @@ public class SimpleBagTest {
     @Test
     public void testGetNbOccurrences() {
         System.out.println("getNbOccurrences");
-        Object inObjet = null;
-        SimpleBag instance = new SimpleBag();
-        int expResult = 0;
-        int result = instance.getNbOccurrences(inObjet);
+        int expResult = 3;
+        int result = monBag.getNbOccurrences(TROIS);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        expResult = 2;
+        result = monBag.getNbOccurrences(DEUX);
+        assertEquals(expResult, result);
+        expResult = 1;
+        result = monBag.getNbOccurrences(UN);
+        assertEquals(expResult, result);
     }
 
     /**
-     * Test of getIteratorDistints method, of class SimpleBag.
+     * Test of getIteratorDistincts method, of class SimpleBag.
      */
     @Test
     public void testGetIteratorDistints() {
         System.out.println("getIteratorDistints");
         SimpleBag instance = new SimpleBag();
         Iterator expResult = null;
-        Iterator result = instance.getIteratorDistints();
+        Iterator result = instance.getIteratorDistincts();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -92,8 +107,15 @@ public class SimpleBagTest {
         int expResult = 0;
         int result = instance.size();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    }
+
+
+    @Test
+    public void testSize2() {
+        System.out.println("size 2");
+        int expResult = 6;
+        int result = monBag.size();
+        assertEquals(expResult, result);
     }
 
     /**
@@ -103,12 +125,24 @@ public class SimpleBagTest {
     public void testIsEmpty() {
         System.out.println("isEmpty");
         SimpleBag instance = new SimpleBag();
-        boolean expResult = false;
+        boolean expResult = true;
         boolean result = instance.isEmpty();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
+
+
+    @Test
+    public void testAdd1() {
+        System.out.println("add 1");
+        SimpleBag<String> instance = new SimpleBag<>();
+        instance.add("Hello");
+        assertEquals(1, instance.size());
+        instance.add("Hello");
+        assertEquals(2, instance.size());
+        instance.add("Salut");
+        assertEquals(3, instance.size());        
+    }
+
 
     /**
      * Test of contains method, of class SimpleBag.
@@ -131,13 +165,66 @@ public class SimpleBagTest {
     @Test
     public void testIterator() {
         System.out.println("iterator");
-        SimpleBag instance = new SimpleBag();
-        Iterator expResult = null;
-        Iterator result = instance.iterator();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+        Map<String, Integer> resultat = new HashMap<String, Integer>();
+        Iterator<String> it = monBag.iterator();
+        while (it.hasNext()) {
+            String suivante = it.next();
+            // Incrémenter le compteur correspondant :
+            Integer nbDejaComptes = resultat.get(suivante);
+            if (null == nbDejaComptes) {
+                resultat.put(suivante, 1);
+            }
+            else {
+                resultat.put(suivante, nbDejaComptes + 1);
+            }
+        }       // parcours
+        assertEquals(new Integer(1), resultat.get(UN));
+        assertEquals(new Integer(2), resultat.get(DEUX));
+        assertEquals(new Integer(3), resultat.get(TROIS));
+    }       // testIterator
+
+    /**
+     * Test of iterator method, of class SimpleBag.
+     */
+    @Test
+    public void testIteratorFor() {
+        System.out.println("iterator");
+        Map<String, Integer> resultat = new HashMap<String, Integer>();
+        for (String suivante : monBag) {
+            // Incrémenter le compteur correspondant :
+            Integer nbDejaComptes = resultat.get(suivante);
+            if (null == nbDejaComptes) {
+                resultat.put(suivante, 1);
+            }
+            else {
+                resultat.put(suivante, nbDejaComptes + 1);
+            }
+        }       // parcours
+        assertEquals(new Integer(1), resultat.get(UN));
+        assertEquals(new Integer(2), resultat.get(DEUX));
+        assertEquals(new Integer(3), resultat.get(TROIS));
+    }       // testIterator
+
+    /**
+     * Test of iterator method, of class SimpleBag.
+     */
+    @Test
+    public void testIteratorTropLoin() {
+        System.out.println("iterator");
+        Iterator<String> it = monBag.iterator();
+        while (it.hasNext()) {
+            String suivante = it.next();
+        }       // parcours
+        // Ce serait bien si ca plantait
+        try {
+            String next = it.next();
+            fail("next va trop loin");
+        }
+        catch (Exception e) {
+            
+        }
+    }       // testIterator
+
 
     /**
      * Test of toArray method, of class SimpleBag.
@@ -185,18 +272,38 @@ public class SimpleBagTest {
 
     /**
      * Test of remove method, of class SimpleBag.
+     * Suppression d'un objet existant
      */
     @Test
     public void testRemove() {
-        System.out.println("remove");
+        System.out.println("remove 1");
         Object o = null;
-        SimpleBag instance = new SimpleBag();
-        boolean expResult = false;
-        boolean result = instance.remove(o);
+        boolean expResult = true;
+        boolean result = monBag.remove(UN);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        int  nbOcc = monBag.getNbOccurrences(UN);
+        assertEquals(0, nbOcc);
+        int nbDistincts = monBag.getNbElementsDistincts();
+        assertEquals(2, nbDistincts);
     }
+
+    /**
+     * Test of remove method, of class SimpleBag.
+     * Suppression d'un objet existant
+     */
+    @Test
+    public void testRemove2() {
+        System.out.println("remove 2");
+        Object o = null;
+        boolean expResult = false;
+        boolean result = monBag.remove(UN);
+        // On le retire encore mais il n'y en a plus
+        result = monBag.remove(UN);
+        assertEquals(expResult, result);
+    }
+
+
+
 
     /**
      * Test of containsAll method, of class SimpleBag.
@@ -266,6 +373,20 @@ public class SimpleBagTest {
         System.out.println("clear");
         SimpleBag instance = new SimpleBag();
         instance.clear();
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of clone method, of class SimpleBag.
+     */
+    @Test
+    public void testClone() {
+        System.out.println("clone");
+        SimpleBag instance = new SimpleBag();
+        Bag expResult = null;
+        Bag result = instance.clone();
+        assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }

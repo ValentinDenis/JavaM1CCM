@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package fr.insset.ccm.m1.agenda;
 
 import java.util.Date;
@@ -15,7 +16,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author valentindenis
+ * @author jldeleage
  */
 public class TacheTest {
     
@@ -54,6 +55,18 @@ public class TacheTest {
     }
 
     /**
+     * Test of setTitre method, of class Tache.
+     */
+    @Test
+    public void testSetTitre() {
+        System.out.println("setTitre");
+        String titre = "";
+        Tache instance = new Tache();
+        instance.setTitre(titre);
+        // TODO review the generated test code and remove the default call to fail.
+    }
+
+    /**
      * Test of getDescription method, of class Tache.
      */
     @Test
@@ -63,61 +76,6 @@ public class TacheTest {
         String expResult = "";
         String result = instance.getDescription();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getImportance method, of class Tache.
-     */
-    @Test
-    public void testGetImportance() {
-        System.out.println("getImportance");
-        Tache instance = new Tache();
-        int expResult = 0;
-        int result = instance.getImportance();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of isTerminée method, of class Tache.
-     */
-    @Test
-    public void testIsTerminée() {
-        System.out.println("isTermin\u00e9e");
-        Tache instance = new Tache();
-        boolean expResult = false;
-        boolean result = instance.isTerminée();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getDateTache method, of class Tache.
-     */
-    @Test
-    public void testGetDateTache() {
-        System.out.println("getDateTache");
-        Tache instance = new Tache();
-        Date expResult = null;
-        Date result = instance.getDateTache();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of setTitre method, of class Tache.
-     */
-    @Test
-    public void testSetTitre() {
-        System.out.println("setTitre");
-        String titre = "";
-        Tache instance = new Tache();
-        instance.setTitre(titre);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
@@ -136,6 +94,21 @@ public class TacheTest {
     }
 
     /**
+     * Test of getImportance method, of class Tache.
+     */
+    @Test
+    public void testGetImportance() {
+        System.out.println("getImportance");
+        Tache instance = new Tache();
+        Priorite expResult = Priorite.BASSE;
+        instance.setImportance(Priorite.BASSE);
+        Priorite result = instance.getImportance();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
      * Test of setImportance method, of class Tache.
      */
     @Test
@@ -143,20 +116,48 @@ public class TacheTest {
         System.out.println("setImportance");
         int importance = 0;
         Tache instance = new Tache();
-        instance.setImportance(importance);
+//        instance.setImportance(importance);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of setTerminée method, of class Tache.
+     * Test of isTerminee method, of class Tache.
      */
     @Test
-    public void testSetTerminée() {
-        System.out.println("setTermin\u00e9e");
-        boolean terminée = false;
+    public void testIsTerminee() {
+        System.out.println("isTerminee");
         Tache instance = new Tache();
-        instance.setTerminée(terminée);
+        boolean expResult = false;
+        boolean result = instance.isTerminee();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setTerminee method, of class Tache.
+     */
+    @Test
+    public void testSetTerminee() {
+        System.out.println("setTerminee");
+        boolean terminee = false;
+        Tache instance = new Tache();
+        instance.setTerminee(terminee);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getDateTache method, of class Tache.
+     */
+    @Test
+    public void testGetDateTache() {
+        System.out.println("getDateTache");
+        Tache instance = new Tache();
+        Date expResult = null;
+        Date result = instance.getDateTache();
+        assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
